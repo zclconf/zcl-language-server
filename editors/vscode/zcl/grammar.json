@@ -1,0 +1,155 @@
+{
+  "fileTypes": [
+    "zcl"
+  ],
+  "name": "zcl",
+  "patterns": [
+    {
+      "begin": "#|//",
+      "captures": {
+        "0": { "name": "punctuation.definition.comment.zcl" }
+      },
+      "comment": "Comments",
+      "end": "$\\n?",
+      "name": "comment.line.number-sign.zcl"
+    },
+    {
+      "begin": "/\\*",
+      "captures": {
+        "0": { "name": "punctuation.definition.comment.zcl" }
+      },
+      "comment": "Block comments",
+      "end": "\\*/",
+      "name": "comment.block.zcl"
+    },
+    {
+      "comment": "Language constants (true, false)",
+      "match": "\\b(true|false)\\b",
+      "name": "constant.language.zcl"
+    },
+    {
+      "comment": "Numbers",
+      "match": "\\b([0-9]+)([kKmMgG]b?)?\\b",
+      "name": "constant.numeric.zcl"
+    },
+    {
+      "comment": "Hex numbers",
+      "match": "\\b(0x[0-9A-Fa-f]+)([kKmMgG]b?)?\\b",
+      "name": "constant.numeric.zcl"
+    },
+    {
+      "captures": {
+        "1": { "name": "variable.other.assignment.zcl" },
+        "2": { "name": "keyword.operator.zcl" }
+      },
+      "comment": "Attribute definitions (left hand side not in double quotes)",
+      "match": "([\\w_-]+)\\s*(=)\\s*"
+    },
+    {
+      "captures": {
+        "1": { "name": "punctuation.quote.double.zcl" },
+        "2": { "name": "variable.assignment.zcl" },
+        "3": { "name": "punctuation.quote.double.zcl" },
+        "4": { "name": "keyword.operator.zcl" }
+      },
+      "comment": "Attribute definitions for object values (left hand side in double quotes)",
+      "match": "(\")([\\w_-]+)(\")\\s*(=)\\s*"
+    },
+    {
+      "captures": {
+        "1": { "name": "entity.name.section.zcl" },
+        "2": { "name": "punctuation.definition.tag.zcl" }
+      },
+      "comment": "Maps",
+      "match": "([\\w\\-_]+)\\s+({)"
+    },
+    {
+      "include": "#strings"
+    },
+    {
+      "include": "#heredoc"
+    }
+  ],
+  "repository": {
+    "string_interpolation": {
+      "patterns": [
+        {
+          "begin": "\\$\\{",
+          "beginCaptures": {
+            "0": { "name": "entity.tag.embedded.start.zcl" }
+          },
+          "end": "\\}",
+          "endCaptures": {
+            "0": { "name": "entity.tag.embedded.end.zcl" }
+          },
+          "name": "source.zcl.embedded.source",
+          "patterns": [
+            { "include": "$self" },
+            { "include": "#string_interpolation_functions" },
+            {
+              "captures": {
+                "0": { "name": "keyword.control.period.zcl" }
+              },
+              "match": "(\\.)"
+            },
+            { "include": "#strings" }
+          ]
+        }
+      ]
+    },
+    "string_interpolation_functions": {
+      "begin": "(select|group)(\\()",
+      "beginCaptures": {
+        "1": { "name": "keyword.other.function.inline.zcl" },
+        "2": { "name": "keyword.other.section.begin.zcl" }
+      },
+      "comment": "Builtin functions",
+      "end": "(\\))",
+      "endCaptures": {
+        "1": { "name": "keyword.other.section.end.zcl" }
+      },
+      "patterns": [
+        { "include": "$self" }
+      ]
+    },
+    "strings": {
+      "begin": "\\\"",
+      "beginCaptures": {
+        "0": { "name": "string.zcl punctuation.definition.string.begin.zcl" }
+      },
+      "comment": "Strings",
+      "end": "\\\"",
+      "endCaptures": {
+        "0": { "name": "string.zcl punctuation.definition.string.end.zcl" }
+      },
+      "patterns": [
+        { "include": "#string_interpolation" },
+        {
+          "match": "([\\w\\-\\/\\._\\\\%]+)",
+          "name": "string.quoted.double.zcl"
+        }
+      ]
+    },
+    "heredoc": {
+      "begin": "(?>\\s*<<-?(\\w+))",
+      "beginCaptures": {
+        "0": { "name": "string.zcl punctuation.definition.string.begin.zcl" },
+        "1": { "name": "keyword.operator.heredoc.zcl" }
+      },
+      "comment": "Heredoc",
+      "end": "^\\1$",
+      "endCaptures": {
+        "0": { "name": "string.zcl punctuation.definition.string.end.zcl keyword.operator.heredoc.zcl" }
+      },
+      "patterns": [
+        { "include": "#string_interpolation" },
+        {
+          "match": "([\\w\\-\\/\\._\\\\%]+)",
+          "name": "string.quoted.double.zcl"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.zcl",
+  "uuid": "f6bac1f9-8300-4dd1-b6f1-fae51fcfa4f4"
+}
